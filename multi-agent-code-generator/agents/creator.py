@@ -22,4 +22,4 @@ FORMAT:
 <code here>
 """
     response = llm.invoke(prompt)
-    return response.content.strip()
+    return response.content
