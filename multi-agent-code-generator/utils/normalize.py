@@ -14,7 +14,7 @@ def normalize_output(output):
             if isinstance(item, str):
                 texts.append(item)
             elif isinstance(item, dict):
-                # 🔥 Gemini uses "text", not "content"
+                # Gemini uses "text", not "content"
                 if "text" in item:
                     texts.append(item["text"])
                 elif "content" in item:
