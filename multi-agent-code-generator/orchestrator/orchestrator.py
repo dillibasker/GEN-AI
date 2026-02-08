@@ -11,18 +11,22 @@ class Orchestrator:
 
     def run(self, requirement):
         # Step 1: Planning
+        print("\n--- PLAN ---\n", flush=True)
         plan_raw = planning_agent(requirement)
         plan = normalize_output(plan_raw)
 
         # Step 2: Designing
+        print("\n--- DESIGN ---\n", flush=True)
         design_raw = designing_agent(plan)
         design = normalize_output(design_raw)
 
         # Step 3: Code Generation
+        print("\n--- GENERATED CODE ---\n", flush=True)
         code_raw = creating_agent(design, self.language)
         code = normalize_output(code_raw)
 
         # Step 4: Testing
+        print("\n--- TEST RESULT ---\n", flush=True)
         test_raw = testing_agent(code, requirement)
         test_result = normalize_output(test_raw)
 
@@ -32,4 +36,3 @@ class Orchestrator:
             "code": code,
             "test_result": test_result
         }
-    
