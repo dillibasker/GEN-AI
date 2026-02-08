@@ -6,6 +6,3 @@ def get_llm():
         temperature=0.2,
         google_api_key="AIzaSyDhJVEoYyTx0bOGjcpmrWA4eon1G_w8CoE"
     )
-
-
-    models/gemini-3-flash-preview

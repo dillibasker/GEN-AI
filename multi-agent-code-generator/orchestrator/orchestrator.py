@@ -21,7 +21,7 @@ class Orchestrator:
         design = normalize_output(design_raw)
 
         # Step 3: Code Generation
-        print("\n--- GENERATED CODE ---\n", flush=True)
+        print("\n--- GENERATING CODE ---\n", flush=True)
         code_raw = creating_agent(design, self.language)
         code = normalize_output(code_raw)
 
