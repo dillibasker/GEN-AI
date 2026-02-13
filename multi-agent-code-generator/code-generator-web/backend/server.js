@@ -4,7 +4,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -17,7 +17,10 @@ app.post('/api/generate', (req, res) => {
   }
 
   // Path to your main.py - adjust this to your actual path
-  const pythonScript = path.join(__dirname, '../../main.py');
+const pythonScript = path.join(
+  __dirname,
+  '../../../main.py'
+);
   
   const python = spawn('python', [pythonScript]);
 
@@ -82,5 +85,6 @@ function parseOutput(output) {
 }
 
 app.listen(PORT, () => {
-  console.log(`Backend server running on http://localhost:${PORT}`);
+  console.log(`Backend server running on port ${PORT}`);
 });
+
