@@ -7,6 +7,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const API_URL = import.meta.env.VITE_API_URL;
+
 
   const handleGenerate = async () => {
     if (!requirement.trim()) {
@@ -19,7 +21,7 @@ function App() {
     setResult(null);
 
     try {
-      const response = await fetch('http://localhost:3001/api/generate', {
+        const response = await fetch(`${API_URL}/api/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
