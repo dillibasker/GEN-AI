@@ -19,7 +19,7 @@ app.post('/api/generate', (req, res) => {
   // Path to your main.py - adjust this to your actual path
 const pythonScript = path.join(
   __dirname,
-  '../../../main.py'
+  '../../main.py'
 );
   
   const python = spawn('python', [pythonScript]);
