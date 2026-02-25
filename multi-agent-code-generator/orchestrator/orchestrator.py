@@ -3,7 +3,7 @@ from agents.designer import designing_agent
 from agents.creator import creating_agent
 from agents.tester import testing_agent
 from utils.normalize import normalize_output
-
+from agents.summarizer import summarizing_agent
 
 class Orchestrator:
     def __init__(self, language="python"):
@@ -30,9 +30,21 @@ class Orchestrator:
         test_raw = testing_agent(code, requirement)
         test_result = normalize_output(test_raw)
 
+        # Step 5: Summary
+        print("\n--- SUMMARY ---\n", flush=True)
+        summary_raw = summarizing_agent(
+            requirement,
+            plan,
+            design,
+            code,
+            test_result
+        )
+        summary = normalize_output(summary_raw)
+
         return {
             "plan": plan,
             "design": design,
             "code": code,
-            "test_result": test_result
+            "test_result": test_result,
+            "summary": summary
         }

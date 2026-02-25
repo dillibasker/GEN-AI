@@ -286,7 +286,33 @@
   overflow-y: auto;
   background: #ffffff;
 }
+/* Download Section Alignment */
+.download-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
 
+/* Styled Download Button */
+.download-btn {
+  min-width: 220px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+}
+
+/* Hover effect */
+.download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* Active click effect */
+.download-btn:active {
+  transform: scale(0.98);
+}
 .result-content pre {
   margin: 0;
   white-space: pre-wrap;

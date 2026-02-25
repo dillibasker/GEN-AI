@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './App.css';
+import jsPDF from "jspdf";
 
 function App() {
   const [requirement, setRequirement] = useState('');
@@ -8,7 +9,6 @@ function App() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const API_URL = import.meta.env.VITE_API_URL;
-
 
   const handleGenerate = async () => {
     if (!requirement.trim()) {
@@ -21,7 +21,7 @@ function App() {
     setResult(null);
 
     try {
-        const response = await fetch(`${API_URL}/api/generate`, {
+      const response = await fetch(`${API_URL}/api/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,6 +43,44 @@ function App() {
     }
   };
 
+  const downloadPDF = () => {
+  if (!result) return;
+
+  const doc = new jsPDF();
+  let y = 10;
+
+  const addSection = (title, content) => {
+    if (!content) return;
+
+    doc.setFontSize(14);
+    doc.text(title, 10, y);
+    y += 8;
+
+    doc.setFontSize(10);
+    const lines = doc.splitTextToSize(content, 180);
+    doc.text(lines, 10, y);
+    y += lines.length * 6 + 10;
+
+    // New page if overflow
+    if (y > 270) {
+      doc.addPage();
+      y = 10;
+    }
+  };
+
+  doc.setFontSize(16);
+  doc.text("Multi-Agent Code Generation Report", 10, y);
+  y += 12;
+
+  addSection("Requirement", requirement);
+  addSection("Plan", result.plan);
+  addSection("Design", result.design);
+  addSection("Generated Code", result.code);
+  addSection("Test Result", result.test_result);
+  addSection("Summary", result.summary);
+
+  doc.save("Multi-Agent-Code-Report.pdf");
+};
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
   };
@@ -130,6 +168,27 @@ function App() {
               content={result.test_result}
               onCopy={() => copyToClipboard(result.test_result)}
             />
+
+            {/* ✅ NEW SUMMARY CARD */}
+            {result.summary && (
+              <ResultCard
+                title="Summary"
+                icon="🧠"
+                content={result.summary}
+                onCopy={() => copyToClipboard(result.summary)}
+              />
+            )}
+          </div>
+        )}
+
+        {result && (
+          <div className="download-section">
+            <button
+              className="generate-btn download-btn"
+              onClick={downloadPDF}
+            >
+              📄 Download PDF Report
+            </button>
           </div>
         )}
       </main>

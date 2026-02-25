@@ -24,7 +24,7 @@ def main():
     print("\n--- DESIGN ---\n", result["design"])
     print("\n--- GENERATED CODE ---\n", result["code"])
     print("\n--- TEST RESULT ---\n", result["test_result"])
-
+    print("\n--- SUMMARY ---\n", result["summary"])
 
 if __name__ == "__main__":
     main()

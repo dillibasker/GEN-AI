@@ -64,6 +64,7 @@ function parseOutput(output) {
     design: '',
     code: '',
     test_result: '',
+    summary: '',
     raw: output
   };
 
@@ -72,11 +73,14 @@ function parseOutput(output) {
     const designMatch = output.match(/--- DESIGN ---\s*([\s\S]*?)(?=\n--- GENERATED CODE ---|$)/);
     const codeMatch = output.match(/--- GENERATED CODE ---\s*([\s\S]*?)(?=\n--- TEST RESULT ---|$)/);
     const testMatch = output.match(/--- TEST RESULT ---\s*([\s\S]*?)$/);
+    const summaryMatch = output.match(/--- SUMMARY ---\s*([\s\S]*?)$/);
 
     if (planMatch) sections.plan = planMatch[1].trim();
     if (designMatch) sections.design = designMatch[1].trim();
     if (codeMatch) sections.code = codeMatch[1].trim();
     if (testMatch) sections.test_result = testMatch[1].trim();
+    if (summaryMatch) sections.summary = summaryMatch[1].trim();
+
   } catch (e) {
     console.error('Parse error:', e);
   }
