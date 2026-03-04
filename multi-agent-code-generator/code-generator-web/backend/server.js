@@ -17,14 +17,20 @@ app.post('/api/generate', (req, res) => {
   }
 
   // Adjust path if needed
-  const pythonScript = path.join(__dirname, '../../main.py');
-
-  // 🔥 Important for production (uses system python)
-const python = spawn(
+const pythonScript = path.join(__dirname, 'main.py');
+ //for local
+/*const python = spawn(
   'C:/Users/Dell/OneDrive/Desktop/My_Project/Gen-AI/Langchain/multi-agent-code-generator/venv310/Scripts/python.exe',
   [pythonScript],
   { cwd: path.dirname(pythonScript) }
-);
+);*/
+
+//for production 
+const pythonPath = process.env.PYTHON_PATH || 'python';
+
+const python = spawn(pythonPath, [pythonScript], {
+  cwd: path.dirname(pythonScript)
+});
 
   let dataBuffer = '';
   let errorOutput = '';
