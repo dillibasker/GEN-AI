@@ -16,28 +16,26 @@ app.post('/api/generate', (req, res) => {
     return res.status(400).json({ error: 'Requirement and language are required' });
   }
 
-  // Path to your main.py - adjust this to your actual path
-const pythonScript = path.join(
-  __dirname,
-  '../../main.py'
+  // Adjust path if needed
+  const pythonScript = path.join(__dirname, '../../main.py');
+
+  // 🔥 Important for production (uses system python)
+const python = spawn(
+  'C:/Users/Dell/OneDrive/Desktop/My_Project/Gen-AI/Langchain/multi-agent-code-generator/venv310/Scripts/python.exe',
+  [pythonScript],
+  { cwd: path.dirname(pythonScript) }
 );
-  
-  const python = spawn('python', [pythonScript]);
 
-  
-  let output = '';
-  let errorOutput = '';
   let dataBuffer = '';
+  let errorOutput = '';
 
-  // Send inputs to Python script
+  // Send inputs
   python.stdin.write(requirement + '\n');
   python.stdin.write(language + '\n');
   python.stdin.end();
 
   python.stdout.on('data', (data) => {
-    const text = data.toString();
-    dataBuffer += text;
-    output += text;
+    dataBuffer += data.toString();
   });
 
   python.stderr.on('data', (data) => {
@@ -45,14 +43,16 @@ const pythonScript = path.join(
   });
 
   python.on('close', (code) => {
+    console.log("Exit Code:", code);
+
     if (code !== 0) {
-      return res.status(500).json({ 
-        error: 'Python script failed', 
-        details: errorOutput 
+      console.error("Python Error:", errorOutput);
+      return res.status(500).json({
+        error: 'Python script failed',
+        details: errorOutput
       });
     }
 
-    // Parse the output to extract sections
     const result = parseOutput(dataBuffer);
     res.json(result);
   });
@@ -72,7 +72,7 @@ function parseOutput(output) {
     const planMatch = output.match(/--- PLAN ---\s*([\s\S]*?)(?=\n--- DESIGN ---|$)/);
     const designMatch = output.match(/--- DESIGN ---\s*([\s\S]*?)(?=\n--- GENERATED CODE ---|$)/);
     const codeMatch = output.match(/--- GENERATED CODE ---\s*([\s\S]*?)(?=\n--- TEST RESULT ---|$)/);
-    const testMatch = output.match(/--- TEST RESULT ---\s*([\s\S]*?)$/);
+    const testMatch = output.match(/--- TEST RESULT ---\s*([\s\S]*?)(?=\n--- SUMMARY ---|$)/);
     const summaryMatch = output.match(/--- SUMMARY ---\s*([\s\S]*?)$/);
 
     if (planMatch) sections.plan = planMatch[1].trim();
@@ -91,4 +91,3 @@ function parseOutput(output) {
 app.listen(PORT, () => {
   console.log(`Backend server running on port ${PORT}`);
 });
-
